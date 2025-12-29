@@ -44,6 +44,37 @@ public:
 	}
 };
 
+class AddCmd {
+	public:
+		void execute(std::vector<std::string> &list, std::string newItem) {
+			list.push_back(newItem);
+		}
+};
+
+class ListCmd {
+	public:
+		void execute(std::vector<std::string> list) {
+			std::cout << "Current contents of your to-do list:" << std::endl;
+			std::cout << "Number | Name" << std::endl;
+			for (int i = 0; i < list.size(); i++) {
+				std::cout << "[" << (i + 1) << "] " << list[i] << std::endl;
+			}
+		}
+};
+
+class RemoveCmd {
+	public:
+		void execute(std::vector<std::string>& list) {
+			size_t itemNum;
+			std::cout << "What is the number of the item? (see number of the item with the list command):" << std::endl;
+			std::cin >> itemNum;
+			itemNum =- 1;
+			// FOR DEBUG ONLY std::cout << "User entered index: " << itemNum << ", list size: " << list.size() << std::endl;
+			list.erase(list.begin() + itemNum);
+
+
+		}
+};
 
 int main()	{
 	std::string name;
@@ -74,6 +105,9 @@ int main()	{
 	ExitCmd exit;
 	ClearCmd clear;
 	HelpCmd help;
+	ListCmd list_cmd;
+	AddCmd add;
+	RemoveCmd remove;
 	std::string cmd_input;
 	std::vector<std::string> list = {};
 	std::cout << "todolist-cli -- Type help for a list of commands." << std::endl;
@@ -91,8 +125,23 @@ int main()	{
 			case 'c':
 				clear.execute(os, name);
 				break;
+			case 'a':
+				std::cout << "\n" << "Name of the item?: ";
+				cmd_input = "";
+				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+				std::getline(std::cin, cmd_input);
+				add.execute(list, cmd_input);
+				std::cout << "Added item " << list.back() << std::endl;
+				break;
+			case 'l':
+				list_cmd.execute(list);
+				break;
+			case 'r':
+				remove.execute(list);
+				break;
 			default:
 				std::cout << "Unknown command, type help for a list of commands." << std::endl;
+				
 		}
 	}
 	return 0;
